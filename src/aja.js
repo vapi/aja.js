@@ -74,6 +74,18 @@
             },
 
             /**
+             * Send withCredentials (false by default) ?
+             *
+             * @example aja().withCredentials(true);
+             *
+             * @param {Boolean|*} [withCredentials] - true means withCredentials (other types than booleans are casted)
+             * @returns {Aja|Boolean} chains or get the withCredentials value
+             */
+             withCredentials : function(withCredentials){
+               return _chain.call(this, 'withCredentials', withCredentials, validators.bool);
+            },
+
+            /**
              * Is the request synchronous (async by default) ?
              *
              * @example aja().sync(true);
@@ -431,13 +443,14 @@
                 //iterators
                 var key, header;
 
-                var method      = data.method || 'get';
-                var async       = data.sync !== true;
-                var request     = new XMLHttpRequest();
-                var _data       = data.data;
-                var body        = data.body;
-                var headers     = data.headers || {};
-                var contentType = this.header('Content-Type');
+                var method          = data.method || 'get';
+                var async           = data.sync !== true;
+                var withCredentials = data.withCredentials !== true;
+                var request         = new XMLHttpRequest();
+                var _data           = data.data;
+                var body            = data.body;
+                var headers         = data.headers || {};
+                var contentType     = this.header('Content-Type');
                 var isUrlEncoded;
                 var openParams;
 
@@ -483,6 +496,9 @@
                 for(header in data.headers){
                     request.setRequestHeader(header, data.headers[header]);
                 }
+
+                //set withCredentials
+                request.withCredentials = data.withCredentials;
 
                 //bind events
                 request.onprogress = function(e){
