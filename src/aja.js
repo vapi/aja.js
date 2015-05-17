@@ -838,4 +838,5 @@
         window.aja = window.aja || aja;
     }
 
+    module.exports = aja;
 }());
